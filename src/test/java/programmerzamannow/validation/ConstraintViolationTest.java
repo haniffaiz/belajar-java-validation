@@ -66,4 +66,23 @@ public class ConstraintViolationTest {
         }
 
     }
+
+    @Test
+    void testValidationSuccess() {
+
+        Person person = new Person();
+        person.setFirstName("Hanif");
+        person.setLastName("Faiz");
+        Set<ConstraintViolation<Person>> violations = validator.validate(person);
+
+
+        for (ConstraintViolation<Person> violation : violations) {
+            System.out.println("Message : "+violation.getMessage());
+            System.out.println("Bean : "+violation.getLeafBean());
+            System.out.println("Constraint : "+violation.getConstraintDescriptor().getAnnotation());
+            System.out.println("Invalid Value : "+violation.getInvalidValue());
+            System.out.println("Path : "+violation.getPropertyPath());
+        }
+
+    }
 }
