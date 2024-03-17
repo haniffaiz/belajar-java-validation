@@ -8,12 +8,16 @@ import jakarta.validation.groups.ConvertGroup;
 import jakarta.validation.groups.Default;
 import org.hibernate.validator.constraints.LuhnCheck;
 import org.hibernate.validator.constraints.Range;
+import programmerzamannow.validation.constraint.CheckCase;
+import programmerzamannow.validation.enums.CaseMode;
 import programmerzamannow.validation.group.CreditCardPaymentGroup;
 import programmerzamannow.validation.group.VirtualAccountPaymentGroup;
 import programmerzamannow.validation.payload.EmailErrorPayload;
 
 public class Payment {
 
+    @CheckCase(groups = {CreditCardPaymentGroup.class, VirtualAccountPaymentGroup.class},
+    mode = CaseMode.UPPER, message = "{order.id.upper}")
     @NotBlank(groups = {CreditCardPaymentGroup.class, VirtualAccountPaymentGroup.class}, message = "{order.id.notblank}")
     @Size(groups = {CreditCardPaymentGroup.class, VirtualAccountPaymentGroup.class}, min = 1, max = 10, message = "{order.id.size}")
     private String orderId;
