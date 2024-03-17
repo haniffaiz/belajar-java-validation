@@ -4,19 +4,32 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.LuhnCheck;
 import org.hibernate.validator.constraints.Range;
+import programmerzamannow.validation.group.CreditCardPaymentGroup;
+import programmerzamannow.validation.group.VirtualAccountPaymentGroup;
 
 public class Payment {
 
-    @NotBlank(message = "order id can not blank")
+    @NotBlank(groups = {CreditCardPaymentGroup.class, VirtualAccountPaymentGroup.class}, message = "order id can not blank")
     private String orderId;
 
-    @Range(min = 10_000L, max = 100_000_000L, message = "amount must between 10.000 and 100.000.000")
-    @NotNull(message = "amount can not null")
+    @Range(groups = {CreditCardPaymentGroup.class, VirtualAccountPaymentGroup.class},min = 10_000L, max = 100_000_000L, message = "amount must between 10.000 and 100.000.000")
+    @NotNull(groups = {CreditCardPaymentGroup.class, VirtualAccountPaymentGroup.class},message = "amount can not null")
     private Long amount;
 
-    @LuhnCheck(message = "invalid credit card number")
-    @NotBlank(message = "credit card can not blank")
+    @LuhnCheck(groups = {CreditCardPaymentGroup.class},message = "invalid credit card number")
+    @NotBlank(groups = {CreditCardPaymentGroup.class},message = "credit card can not blank")
     private String creditCard;
+
+    @NotBlank(groups = {VirtualAccountPaymentGroup.class},message = "virtual account can not blank")
+    private String virtualAccount;
+
+    public String getVirtualAccount() {
+        return virtualAccount;
+    }
+
+    public void setVirtualAccount(String virtualAccount) {
+        this.virtualAccount = virtualAccount;
+    }
 
     public String getOrderId() {
         return orderId;
@@ -48,6 +61,7 @@ public class Payment {
                 "orderId='" + orderId + '\'' +
                 ", amount=" + amount +
                 ", creditCard='" + creditCard + '\'' +
+                ", virtualAccount='" + virtualAccount + '\'' +
                 '}';
     }
 }
