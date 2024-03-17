@@ -1,7 +1,10 @@
 package programmerzamannow.validation;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.groups.ConvertGroup;
+import jakarta.validation.groups.Default;
 import org.hibernate.validator.constraints.LuhnCheck;
 import org.hibernate.validator.constraints.Range;
 import programmerzamannow.validation.group.CreditCardPaymentGroup;
@@ -22,6 +25,32 @@ public class Payment {
 
     @NotBlank(groups = {VirtualAccountPaymentGroup.class},message = "virtual account can not blank")
     private String virtualAccount;
+
+    @Valid
+    @NotNull(groups = {VirtualAccountPaymentGroup.class, CreditCardPaymentGroup.class},
+    message = "customer can not null")
+    @ConvertGroup(from = VirtualAccountPaymentGroup.class, to = Default.class)
+    @ConvertGroup(from = CreditCardPaymentGroup.class, to= Default.class)
+    private Customer customer;
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "orderId='" + orderId + '\'' +
+                ", amount=" + amount +
+                ", creditCard='" + creditCard + '\'' +
+                ", virtualAccount='" + virtualAccount + '\'' +
+                ", customer=" + customer +
+                '}';
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
     public String getVirtualAccount() {
         return virtualAccount;
@@ -55,13 +84,5 @@ public class Payment {
         this.creditCard = creditCard;
     }
 
-    @Override
-    public String toString() {
-        return "Payment{" +
-                "orderId='" + orderId + '\'' +
-                ", amount=" + amount +
-                ", creditCard='" + creditCard + '\'' +
-                ", virtualAccount='" + virtualAccount + '\'' +
-                '}';
-    }
+
 }
