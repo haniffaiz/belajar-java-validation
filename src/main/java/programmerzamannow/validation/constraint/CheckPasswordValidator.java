@@ -6,11 +6,28 @@ import programmerzamannow.validation.Register;
 
 public class CheckPasswordValidator implements ConstraintValidator<CheckPassword, Register> {
 
+    private String messageTemplate;
+
     @Override
-    public boolean isValid(Register value, ConstraintValidatorContext constraintValidatorContext) {
+    public void initialize(CheckPassword constraintAnnotation) {
+        messageTemplate = constraintAnnotation.message();
+    }
+
+    @Override
+    public boolean isValid(Register value, ConstraintValidatorContext context) {
         if (value.getPassword() == null || value.getRetypePassword() == null){
             return true;
         }
-        return value.getPassword().equals(value.getRetypePassword());
+        boolean isValid = value.getPassword().equals(value.getRetypePassword());
+
+        if (!isValid){
+            context.disableDefaultConstraintViolation();
+
+            context.buildConstraintViolationWithTemplate(messageTemplate)
+                    .addPropertyNode("retypePassword")
+                    .addConstraintViolation();
+        }
+
+        return isValid;
     }
 }

@@ -10,7 +10,7 @@ public class ClassLevelValidationTest extends AbstractValidatorTest{
         Register register = new Register();
         register.setUsername("hanif");
         register.setPassword("rahasia");
-        register.setRetypePassword("rahasia");
+        register.setRetypePassword("rahasia123");
 
         validate(register);
     }
